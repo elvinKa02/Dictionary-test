@@ -45,6 +45,7 @@ class Writer(tk.Toplevel, Main):
         self.dct = {}
         self.init_writer()
 
+    # Вид открывающегося окна
     def init_writer(self):
         self.title('RU-EN')
         self.geometry('400x220+400+300')
@@ -76,6 +77,7 @@ class Writer(tk.Toplevel, Main):
         self.wait_window()
         return self.dct
 
+    # Добавление в столбцы и csv файл, закрытие
     def close_and_add(self):
         self.dct[self.word.get()] = self.trans.get()
         self.destroy()
