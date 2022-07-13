@@ -25,8 +25,8 @@ class Main(tk.Frame):
 
         self.tree = ttk.Treeview(self, column=('Word', 'Translate'), height=15, show='headings')
 
-        self.tree.column('Word', width=230, anchor=tk.CENTER, column=0)
-        self.tree.column('Translate', width=230, anchor=tk.CENTER, column=1)
+        self.tree.column('Word', width=230, anchor=tk.CENTER)
+        self.tree.column('Translate', width=230, anchor=tk.CENTER)
 
         self.tree.heading('Word', text='Слово')
         self.tree.heading('Translate', text='Перевод')
