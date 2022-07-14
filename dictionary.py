@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import csv
 
 window = tk.Tk()
@@ -73,7 +74,10 @@ class Main(tk.Frame):
                 word = row['word']
                 translate = row['translate']
                 result[word] = translate
-            self.entry_return_translate.insert(0, result[get_word])
+            if get_word in result:
+                self.entry_return_translate.insert(0, result[get_word])
+            else:
+                messagebox.showerror('Ошибка', 'Введёное слово не на русском языке или отсутствует в словаре')
         csvfile.close()
 
 
