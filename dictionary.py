@@ -65,7 +65,7 @@ class Main(tk.Frame):
 
     # Взятие слов с переводом из csv файла и добавление в tkinter
     def translate_and_check(self):
-        get_word = self.write_word.get()
+        get_word = self.write_word.get().lower()
         with open('dict.csv', 'r') as csvfile:
             reader = csv.DictReader(csvfile)
             result = {}
