@@ -16,12 +16,32 @@ class Main(tk.Frame):
 
     # Вид главного окна
     def main_init(self):
-        toolbar = tk.Frame(bd=20, bg="#0000FF")
+        toolbar = tk.Frame(bd=30, bg="#0000FF")
         toolbar.pack(fill=tk.X, side=tk.TOP)
 
-        btn_open_window = tk.Button(toolbar, text='Добавить слово', bd=8, bg='#FF0000', compound=tk.TOP,
+        label_word = ttk.Label(toolbar, text='Введите слово:')
+        label_word.place(x=-25, y=-25)
+
+        self.write_word = tk.StringVar()
+
+        self.entry_write_word = ttk.Entry(toolbar, textvariable=self.write_word)
+        self.entry_write_word.place(x=70, y=-26)
+
+        return_translate = ttk.Label(toolbar, text='Перевод:')
+        return_translate.place(x=-10, y=40)
+
+        self.entry_return_translate = ttk.Entry(toolbar)
+        self.entry_return_translate.place(x=70, y=40)
+
+        btn_trans = tk.Button(toolbar, text='Перевести', bd=3, bg='lightgreen', command=self.translate_and_check)
+        btn_trans.place(x=50, y=5)
+
+        btn_clear = tk.Button(toolbar, text='Очистить', bd=3, bg='yellow', command=self.clear_btn)
+        btn_clear.place(x=150, y=5)
+
+        btn_open_window = tk.Button(toolbar, text='Добавить слово', bd=8, bg='#FF0000', compound=tk.LEFT,
                                     command=self.open_window_and_write)
-        btn_open_window.pack()
+        btn_open_window.pack(side='right')
 
         self.tree = ttk.Treeview(self, column=('Word', 'Translate'), height=15, show='headings')
 
@@ -32,11 +52,29 @@ class Main(tk.Frame):
         self.tree.heading('Translate', text='Перевод')
         self.tree.pack()
 
+    # Очистка содержимого в вводе и выводе
+    def clear_btn(self):
+        self.entry_write_word.delete('0', 'end')
+        self.entry_return_translate.delete('0', 'end')
+
     # Открытие окна и запись в столбцы
     def open_window_and_write(self):
         self.words = Writer().show()
         for k, v in self.words.items():
             self.tree.insert("", 0, values=(k, v))
+
+    # Взятие слов с переводом из csv файла и добавление в tkinter
+    def translate_and_check(self):
+        get_word = self.write_word.get()
+        with open('dict.csv', 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            result = {}
+            for row in reader:
+                word = row['word']
+                translate = row['translate']
+                result[word] = translate
+            self.entry_return_translate.insert(0, result[get_word])
+        csvfile.close()
 
 
 class Writer(tk.Toplevel, Main):
@@ -77,14 +115,10 @@ class Writer(tk.Toplevel, Main):
         self.wait_window()
         return self.dct
 
-    # Добавление в столбцы и csv файл, закрытие
+    # Добавление в словарь и закрытие
     def close_and_add(self):
         self.dct[self.word.get()] = self.trans.get()
         self.destroy()
-        with open('dict.csv', 'a') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows([self.word.get(), self.trans.get()])
-        csvfile.close()
 
 
 if __name__ == "__main__":
